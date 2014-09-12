@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Maven: com.gemstone.gemfire:gemfire:7.0.2">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/gemstone/gemfire/gemfire/7.0.2/gemfire-7.0.2.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/gemstone/gemfire/gemfire/7.0.2/gemfire-7.0.2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/gemstone/gemfire/gemfire/7.0.2/gemfire-7.0.2-sources.jar!/" />
+      <root url="file:///var/folders/56/6nqv2jcn2ln93y_np3_9pv700000gn/T/intellijad" />
+    </SOURCES>
+  </library>
+</component>
