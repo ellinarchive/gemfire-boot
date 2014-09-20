@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xmlns:gfe="http://www.springframework.org/schema/gemfire"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:int-gfe="http://www.springframework.org/schema/integration/gemfire"
+	xmlns:file="http://www.springframework.org/schema/integration/file"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xsi:schemaLocation="http://www.springframework.org/schema/integration/gemfire http://www.springframework.org/schema/integration/gemfire/spring-integration-gemfire-4.0.xsd
+		http://www.springframework.org/schema/gemfire http://www.springframework.org/schema/gemfire/spring-gemfire.xsd
+		http://www.springframework.org/schema/integration/file http://www.springframework.org/schema/integration/file/spring-integration-file-2.2.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <gfe:client-cache id="client-cache" pool-name="client-pool"/>
+
+
+
+    <gfe:client-region id="test" cache-ref="client-cache" pool-name="client-pool"/>
+
+    <gfe:cq-listener-container id="queryListenerContainer" cache="client-cache"
+                               pool-name="client-pool"/>
+
+    <int-gfe:cq-inbound-channel-adapter id="inputChannel"
+                                        cq-listener-container="queryListenerContainer"
+                                        query="select * from /Stocks"  />
+
+    <gfe:pool id="client-pool"  subscription-enabled="true">
+         <gfe:server host="localhost" port="40404" />
+     </gfe:pool>
+
+   <file:outbound-channel-adapter id="files"
+                           mode="APPEND"
+                           charset="UTF-8"
+                           directory="/Users/jellin/"
+                           filename-generator-expression="'HelloWorld'"
+                          />
+
+    <int:transformer input-channel="inputChannel" output-channel="files" method="toString">
+        <bean class="demo.transformer.JsonStringToObjectTransformer"/>
+    </int:transformer>
+
+</beans>
