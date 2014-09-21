@@ -15,32 +15,35 @@
 		http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <gfe:client-cache id="client-cache" pool-name="client-pool"/>
-
-
-
-    <gfe:client-region id="test" cache-ref="client-cache" pool-name="client-pool"/>
-
-    <gfe:cq-listener-container id="queryListenerContainer" cache="client-cache"
-                               pool-name="client-pool"/>
-
-    <int-gfe:cq-inbound-channel-adapter id="inputChannel"
-                                        cq-listener-container="queryListenerContainer"
-                                        query="select * from /Stocks"  />
-
-    <gfe:pool id="client-pool"  subscription-enabled="true">
-         <gfe:server host="localhost" port="40404" />
-     </gfe:pool>
-
-   <file:outbound-channel-adapter id="files"
-                           mode="APPEND"
-                           charset="UTF-8"
-                           directory="/Users/jellin/"
-                           filename-generator-expression="'HelloWorld'"
-                          />
-
-    <int:transformer input-channel="inputChannel" output-channel="files" method="toString">
-        <bean class="demo.transformer.JsonStringToObjectTransformer"/>
-    </int:transformer>
+	    <gfe:client-cache id="client-cache" pool-name="client-pool"/>
+	
+		<gfe:pool id="client-pool"  subscription-enabled="true">
+	         <gfe:server host="localhost" port="40404" />
+	     </gfe:pool>
+	
+	
+	    <gfe:client-region id="test" cache-ref="client-cache" pool-name="client-pool"/>
+	
+	    <gfe:cq-listener-container id="queryListenerContainer" cache="client-cache"
+	                               pool-name="client-pool"/>
+	
+	    <int-gfe:cq-inbound-channel-adapter id="cqInputChannel"
+	                                        cq-listener-container="queryListenerContainer"
+	                                        query="select * from /Customesr"  />
+	
+	    <gfe:pool id="client-pool"  subscription-enabled="true">
+	         <gfe:server host="localhost" port="40404" />
+	     </gfe:pool>
+	
+	   <file:outbound-channel-adapter id="files"
+	                           mode="APPEND"
+	                           charset="UTF-8"
+	                           directory="/Users/jellin/"
+	                           filename-generator-expression="'HelloWorld'"
+	                          />
+	
+	    <int:transformer input-channel="cqInputChannel" output-channel="files" method="toString">
+	        <bean class="demo.transformer.JsonStringToObjectTransformer"/>
+	    </int:transformer>
 
 </beans>
