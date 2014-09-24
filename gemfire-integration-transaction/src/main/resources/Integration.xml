@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:gfe="http://www.springframework.org/schema/gemfire"
+	xmlns:int-gfe="http://www.springframework.org/schema/integration/gemfire"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/integration/gemfire http://www.springframework.org/schema/integration/gemfire/spring-integration-gemfire-4.0.xsd
+        http://www.springframework.org/schema/gemfire http://www.springframework.org/schema/gemfire/spring-gemfire.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+
+     <!--Gemfire Cache Setup-->
+
+    <util:properties id="gemfire-props">
+        <prop key="log-level">warning</prop>
+    </util:properties>
+
+    <gfe:transaction-manager cache-ref="gemfire-cache" id="transactionManager"/>
+
+    <gfe:cache properties-ref="gemfire-props"/>
+
+    <gfe:replicated-region id="Customer">
+        <gfe:cache-listener ref="cacheListener"/>
+    </gfe:replicated-region>
+
+    <gfe:replicated-region id="CustomerCopy1">
+        <gfe:cache-writer ref="cacheWriter"/>
+    </gfe:replicated-region>
+
+    <gfe:replicated-region id="CustomerCopy2">
+    </gfe:replicated-region>
+
+    <gfe:replicated-region id="Error">
+        <gfe:cache-listener ref="cacheListener"/>
+    </gfe:replicated-region>
+
+
+    <int-gfe:inbound-channel-adapter id="inputChannel" region="Customer"
+                                     cache-events="CREATED,UPDATED" channel="gemfireFeed" error-channel="errorChannel"/>
+
+    <int:channel id="gemfireFeed"/>
+
+    <int:service-activator input-channel="gemfireFeed" ref="txService"/>
+
+    <!--gemfire beans-->
+
+    <bean id="cacheListener" class="com.ellin.gemfire.demo.cachevents.CacheListener"/>
+
+    <bean id="cacheWriter" class="com.ellin.gemfire.demo.cachevents.ErrorCacheWriter"/>
+
+
+    <!---error handling-->
+
+    <int:transformer input-channel="errorChannel"
+                     output-channel="errorToGemfire" method="toString">
+        <bean class="com.ellin.gemfire.demo.util.JSONToStringTransformer" />
+    </int:transformer>
+
+    <int-gfe:outbound-channel-adapter id="errorToGemfire"  region="Error">
+        <int-gfe:cache-entries>
+            <entry key="payload" value="payload"/>
+        </int-gfe:cache-entries>
+    </int-gfe:outbound-channel-adapter>
+
+
+</beans>
