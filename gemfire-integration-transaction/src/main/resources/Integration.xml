@@ -49,13 +49,13 @@
 
     <int-gfe:outbound-channel-adapter id="region1Channel"   region="CustomerCopy1" >
         <int-gfe:cache-entries>
-            <entry key="payload.id" value="payload"/>
+            <entry key="payload.lastname" value="payload"/>
         </int-gfe:cache-entries>
     </int-gfe:outbound-channel-adapter>
 
     <int-gfe:outbound-channel-adapter id="region2Channel"  region="CustomerCopy2">
         <int-gfe:cache-entries>
-            <entry key="payload.id" value="payload"/>
+            <entry key="payload.lastname" value="payload"/>
         </int-gfe:cache-entries>
     </int-gfe:outbound-channel-adapter>
 
@@ -72,7 +72,6 @@
 
     <!---error handling-->
 
-    <bean id="transformer" class="com.ellin.gemfire.demo.util.JSONToStringTransformer" />
 
 
     <int:bridge input-channel="errorChannel" output-channel="errorToGemfire"/>
@@ -80,7 +79,7 @@
 
     <int-gfe:outbound-channel-adapter id="errorToGemfire"  region="Error">
         <int-gfe:cache-entries>
-            <entry key="payload.failedMessage.payload.id" value="payload.failedMessage.payload"/>
+            <entry key="payload.failedMessage.payload.lastname" value="payload.failedMessage.payload"/>
         </int-gfe:cache-entries>
     </int-gfe:outbound-channel-adapter>
 

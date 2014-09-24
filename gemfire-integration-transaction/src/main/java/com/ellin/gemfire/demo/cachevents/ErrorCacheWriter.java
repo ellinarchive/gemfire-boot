@@ -1,6 +1,7 @@
 package com.ellin.gemfire.demo.cachevents;
 
 
+import com.ellin.gemfire.demo.model.Customer;
 import com.gemstone.gemfire.cache.*;
 import com.gemstone.gemfire.cache.util.CacheListenerAdapter;
 import com.gemstone.gemfire.cache.util.CacheWriterAdapter;
@@ -12,7 +13,12 @@ public class ErrorCacheWriter<K,V> implements CacheWriter,Declarable {
     public void beforeCreate(EntryEvent e) {
         System.out.println(e.getRegion().getFullPath()+"    Received beforeCreate event for entry: " +
                 e.getKey() + ", " + e.getNewValue());
-        throw new CacheWriterException("ugly error");
+        Customer c = (Customer)e.getNewValue();
+
+        if("smith".equalsIgnoreCase(c.getLastname())){
+            throw new CacheWriterException("Smiths aren't allowed here");
+        }
+
     }
 
     public void beforeUpdate(EntryEvent e) {

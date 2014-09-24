@@ -32,33 +32,32 @@ public class HelloService {
     public void doSomeStuff() throws InterruptedException {
 
         System.out.println("Creating new Customer");
-        Customer customer = new Customer(1L,"1","Last");
-        Customer customer2 = new Customer(2L,"2","Last");
-        Customer customer3 = new Customer(3L,"3","Last");
+        Customer customer = new Customer(1L,"John","Doe");
+        Customer customer2 = new Customer(2L,"John","Smith");
+        Customer customer3 = new Customer(3L,"Paul","Revere");
 
         Region r = CacheFactory.getAnyInstance().getRegion("Customer");
 
-        r.put("1",customer);
-        r.put("2",customer2);
-        r.put("3",customer3);
-        System.out.println("customer size is "+r.keySet());
-
+        r.put(customer.getLastname(),customer);
+        r.put(customer2.getLastname(),customer2);
+        r.put(customer3.getLastname(),customer3);
 
 
         Thread.sleep(1000);
 
         Region product = CacheFactory.getAnyInstance().getRegion("CustomerCopy1");
 
-        System.out.println("product size is "+product.keySet());
 
         Region order = CacheFactory.getAnyInstance().getRegion("CustomerCopy2");
 
         Region error = CacheFactory.getAnyInstance().getRegion("Error");
 
+        System.out.println("customer list is "+r.keySet());
 
-        System.out.println("error size is "+error.keySet());
+        System.out.println("order list is "+order.keySet());
+        System.out.println("product list is "+product.keySet());
+        System.out.println("error list is "+error.keySet());
 
-        System.out.println("order size is "+order.keySet());
 
     }
 
