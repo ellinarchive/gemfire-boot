@@ -7,16 +7,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import java.text.SimpleDateFormat;
 
 @Configuration
 @ComponentScan
 @ImportResource("Integration.xml")
 @EnableTransactionManagement
 public class Application {
-
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-
 
     public static void main(String[] args) throws InterruptedException {
         ConfigurableApplicationContext context = SpringApplication.run(Application.class, args);
