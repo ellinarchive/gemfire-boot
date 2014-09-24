@@ -38,10 +38,13 @@
     </gfe:replicated-region>
 
 
-    <int-gfe:inbound-channel-adapter id="inputChannel" region="Customer"
+    <int-gfe:inbound-channel-adapter id="inputChannel" region="Customer"  expression="newValue"
                                      cache-events="CREATED,UPDATED" channel="gemfireFeed" error-channel="errorChannel"/>
 
     <int:channel id="gemfireFeed"/>
+    <int:channel id="errorChannel"/>
+
+
 
     <int:service-activator input-channel="gemfireFeed" ref="txService"/>
 
@@ -54,16 +57,35 @@
 
     <!---error handling-->
 
-    <int:transformer input-channel="errorChannel"
-                     output-channel="errorToGemfire" method="toString">
-        <bean class="com.ellin.gemfire.demo.util.JSONToStringTransformer" />
-    </int:transformer>
+    <bean id="transformer" class="com.ellin.gemfire.demo.util.JSONToStringTransformer" />
+
+
+    <int:bridge input-channel="errorChannel" output-channel="errorToGemfire"/>
+
 
     <int-gfe:outbound-channel-adapter id="errorToGemfire"  region="Error">
+        <int-gfe:cache-entries>
+            <entry key="payload.failedMessage.payload.id" value="payload.failedMessage.payload"/>
+        </int-gfe:cache-entries>
+    </int-gfe:outbound-channel-adapter>
+
+<!--    <int:recipient-list-router>
+        <int:recipient channel="region1Channel"/>
+        <int:recipient channel="region2Channel"/>
+    </int:recipient-list-router>
+
+    <int-gfe:outbound-channel-adapter id="region1Channel"  region="CustomerCopy1" >
         <int-gfe:cache-entries>
             <entry key="payload" value="payload"/>
         </int-gfe:cache-entries>
     </int-gfe:outbound-channel-adapter>
+
+    <int-gfe:outbound-channel-adapter id="region2Channel"  region="CustomerCopy2">
+        <int-gfe:cache-entries>
+            <entry key="payload" value="payload"/>
+        </int-gfe:cache-entries>
+    </int-gfe:outbound-channel-adapter>
+    -->
 
 
 </beans>

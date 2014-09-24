@@ -19,13 +19,6 @@ import java.io.Serializable;
 import org.springframework.util.Assert;
 
 
-/**
- * A customer.
- *
- * @author Oliver Gierke
- * @author David Turanski
- */
-
 
 public class Customer implements Serializable {
 
@@ -37,7 +30,7 @@ public class Customer implements Serializable {
     private Long id;
 
     public Customer(){
-super();
+        super();
     }
 
     /**
@@ -49,7 +42,6 @@ super();
     public Customer(Long id,  String firstname, String lastname) {
         Assert.hasText(firstname);
         Assert.hasText(lastname);
-       // Assert.notNull(emailAddress);
 
         this.firstname = firstname;
         this.lastname = lastname;

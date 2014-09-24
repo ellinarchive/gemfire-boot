@@ -12,18 +12,16 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Created by jeff on 9/23/2014.
  */
-@Component
+@Component()
 public class TxService {
 
     @Autowired
     Cache cache;
 
     @Transactional
-    public void doInTransaction(EntryEvent ec){
+    public void doInTransaction(Customer c){
 
 
-        Customer c = (Customer) ec.getNewValue();
-        System.out.println("here");
         cache.getRegion("CustomerCopy1").put(c.getId(),c);
         cache.getRegion("CustomerCopy2").put(c.getId(), c);
 

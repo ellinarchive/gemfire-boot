@@ -35,19 +35,6 @@ public class HelloService {
         Customer customer = new Customer(1L,"1","Last");
         Customer customer2 = new Customer(2L,"2","Last");
         Customer customer3 = new Customer(3L,"3","Last");
-        //Customer customer2 = new Customer(2L,new EmailAddress("customer2@customer.com"),"2","Last");
-        //Customer customer3 = new Customer(3L,new EmailAddress("customer3@customer.com"),"3","Last");
-
-        //customerRepository.save(customer);
-        //customerRepository.save(customer2);
-        //customerRepository.save(customer3);
-
-        //List <Customer> customers = customerRepository.findAll();
-
-        //System.out.println("Found a few Customers, How Many = " + customers.size());
-
-
-       // Customer customers2 = customerRepository.findByEmailAddress(new EmailAddress("customer@customer.com"));
 
         Region r = CacheFactory.getAnyInstance().getRegion("Customer");
 
@@ -59,6 +46,7 @@ public class HelloService {
 
 
         Thread.sleep(1000);
+
         Region product = CacheFactory.getAnyInstance().getRegion("CustomerCopy1");
 
         System.out.println("product size is "+product.keySet());
